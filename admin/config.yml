@@ -1,0 +1,21 @@
+backend:
+  name: github
+  repo: HANJUN8/G-HIGH-TIMES
+  branch: master # 만약 깃허브 메인 브랜치 이름이 main이라면 main으로 바꿔주세요!
+  base_url: https://github.com
+  auth_type: pkce
+  app_id: Ov23liErON088VnBaDAY
+
+media_folder: "assets/images" # 사진이 저장될 곳
+public_folder: "/assets/images"
+
+collections:
+  - name: "post"
+    label: "기사 작성 (Post)"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "제목", name: "title", widget: "string"}
+      - {label: "카테고리", name: "categories", widget: "list", default: ["News"]}
+      - {label: "본문", name: "body", widget: "markdown"}
