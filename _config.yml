@@ -113,3 +113,9 @@ category_archive:
 tag_archive:
   type: liquid
   path: /tags/
+
+  # Analytics
+analytics:
+  provider: "google-gtag"
+  google:
+    tracking_id: GTM-MBPGJFN9
