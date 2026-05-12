@@ -7,7 +7,7 @@
         body { font-family: 'Arial', sans-serif; background: #f4f4f4; padding: 40px; display: flex; justify-content: center; }
         .editor-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 800px; }
         h2 { border-bottom: 2px solid #000; padding-bottom: 10px; }
-        input, textarea { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        input, select, textarea { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
         textarea { height: 400px; line-height: 1.6; }
         .publish-btn { background: #d32f2f; color: white; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 5px; width: 100%; transition: 0.3s; }
         .publish-btn:hover { background: #b71c1c; }
@@ -16,34 +16,41 @@
 </head>
 <body>
     <div class="editor-container">
-        <h2>📰 G-HIGH TIMES 리포터 데스크</h2>
-        <p>※ 로그인 없이 작성 가능합니다. 작성 후 하단 버튼을 눌러주세요.</p>
+        <h2>📰 G-HIGH TIMES 리포터 데스크 (v2.0)</h2>
+        <p>※ 분류를 선택하고 기사를 작성해 주세요.</p>
+        
+        <select id="category">
+            <option value="News">News (뉴스)</option>
+            <option value="Blog">Blog (블로그/칼럼)</option>
+            <option value="Interview">Interview (인터뷰)</option>
+            <option value="Review">Review (리뷰)</option>
+        </select>
+
         <input type="text" id="title" placeholder="기사 제목을 입력하세요">
         <input type="text" id="author" placeholder="작성자 이름">
         <textarea id="content" placeholder="여기에 기사 내용을 작성하세요..."></textarea>
-        <button class="publish-btn" onclick="publishArticle()">🚀 기사 발행하기 (깃허브 전송)</button>
+        <button class="publish-btn" onclick="publishArticle()">🚀 기사 발행하기</button>
     </div>
 
     <script>
         function publishArticle() {
+            const category = document.getElementById('category').value;
             const title = document.getElementById('title').value;
             const author = document.getElementById('author').value;
             const content = document.getElementById('content').value;
             
             if(!title || !content) { alert('제목과 내용을 입력해주세요!'); return; }
 
-            // 오늘 날짜 생성 (YYYY-MM-DD)
             const now = new Date();
             const dateStr = now.toISOString().split('T')[0];
-            
-            // 파일명과 내용 구성 (Jekyll 포맷)
             const fileName = `${dateStr}-${Math.floor(Math.random()*1000)}.md`;
-            const fileContent = `---\nlayout: post\ntitle: "${title}"\nauthor: "${author}"\ndate: ${dateStr}\n---\n\n${content}`;
+            
+            // 머리말(Front Matter)에 카테고리 정보가 쏙 들어갑니다!
+            const fileContent = `---\nlayout: post\ntitle: "${title}"\nauthor: "${author}"\ndate: ${dateStr}\ncategories: [${category}]\n---\n\n${content}`;
 
-            // 깃허브 파일 작성 페이지로 바로 연결하는 마법의 링크
             const githubUrl = `https://github.com/HANJUN8/G-HIGH-TIMES/new/master/_posts?filename=${fileName}&value=${encodeURIComponent(fileContent)}`;
             
-            alert('작성하신 기사를 서버에 안전하게 전송합니다. 마지막 화면에서 [Commit changes] 버튼을 눌러주세요!');
+            alert('기사를 전송합니다. 깃허브 화면이 열리면 우측 상단의 [Commit changes]를 눌러주세요!');
             window.open(githubUrl, '_blank');
         }
     </script>
