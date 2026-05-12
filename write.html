@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>G-HIGH TIMES - 기사 작성</title>
+    <title>G-HIGH TIMES - 무적의 리포터 데스크</title>
     <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <style>
@@ -20,10 +20,10 @@
         <h2>📰 G-HIGH TIMES 기사 작성</h2>
         
         <div class="guide">
-            <strong>✅ 기사 발행 순서:</strong><br>
-            1. 카테고리 선택 및 기사 작성 (사진은 깃허브에서 넣기)<br>
-            2. <b>[기사 발행하기]</b> 클릭 (내용이 자동으로 복사됩니다!)<br>
-            3. 열리는 깃허브 화면 본문에 <b>붙여넣기(Ctrl+V)</b> 하면 끝!
+            <strong>✅ 기사 발행 방법 (에러 해결 버전):</strong><br>
+            1. 기사를 작성한 후 <b>[기사 발행하기]</b> 버튼을 누릅니다.<br>
+            2. 기사 내용이 자동으로 복사됩니다. 확인 창이 뜨면 <b>[확인]</b>을 누르세요.<br>
+            3. 열리는 깃허브 창의 본문 칸을 클릭하고 <b>붙여넣기(Ctrl+V)</b> 하세요!
         </div>
 
         <select id="category">
@@ -40,12 +40,13 @@
     </div>
 
     <script>
+        // 에디터 설정
         const easyMDE = new EasyMDE({
             element: document.getElementById('content'),
-            placeholder: "여기에 기사를 작성하세요...",
+            placeholder: "여기에 기사 내용을 작성하세요...",
             spellChecker: false,
             status: false,
-            autosave: { enabled: true, uniqueId: "ghigh-editor" } // 자동 저장 기능 추가!
+            autosave: { enabled: true, uniqueId: "ghigh-editor-v4" }
         });
 
         function publishArticle() {
@@ -60,18 +61,18 @@
             const dateStr = now.toISOString().split('T')[0];
             const fileName = `${dateStr}-${Math.floor(Math.random()*1000)}.md`;
             
-            // 깃허브에 들어갈 최종 소스코드 생성
+            // 깃허브에 들어갈 최종 텍스트 완성
             const fileContent = `---\nlayout: post\ntitle: "${title}"\nauthor: "${author}"\ndate: ${dateStr}\ncategories: [${category}]\n---\n\n${content}`;
 
-            // 1. 클립보드에 기사 내용 복사
+            // 핵심: 주소에 내용을 담지 않고 클립보드에 복사함!
             navigator.clipboard.writeText(fileContent).then(() => {
-                // 2. 깃허브 '새 파일 만들기' 창으로 이동 (파일 이름만 들고 갑니다)
+                // 주소창에는 파일 이름만 전달 (길이가 매우 짧아짐)
                 const githubUrl = `https://github.com/HANJUN8/G-HIGH-TIMES/new/master/_posts?filename=${fileName}`;
                 
-                alert('기사 내용이 복사되었습니다!\n\n이제 열리는 깃허브 화면의 빈 칸에 [붙여넣기(Ctrl+V)]를 하고 저장해주세요.');
+                alert('기사 내용이 안전하게 복사되었습니다!\n\n이제 열리는 화면의 빈 칸에 [Ctrl + V]로 붙여넣어 주세요.');
                 window.open(githubUrl, '_blank');
             }).catch(err => {
-                alert('복사 실패! 직접 내용을 복사해서 깃허브에 붙여넣어주세요.');
+                alert('복사 기능에 문제가 발생했습니다. 내용을 직접 복사해서 깃허브에 붙여넣어 주세요.');
             });
         }
     </script>
