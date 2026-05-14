@@ -119,3 +119,7 @@ analytics:
   provider: "google-gtag"
   google:
     tracking_id: GTM-MBPGJFN9
+
+    # 커스텀 디자인 연결
+head_scripts:
+  - "https://hanjun8.github.io/G-HIGH-TIMES/assets/css/nyt.css"
