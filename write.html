@@ -2,43 +2,43 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>G-HIGH TIMES - 기사 작성</title>
+    <title>G-HIGH TIMES - NYT 리포터 데스크</title>
     <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <style>
-        body { font-family: 'Arial', sans-serif; background: #f4f4f4; padding: 40px; display: flex; justify-content: center; }
-        .editor-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 800px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
-        .publish-btn { background: #28a745; color: white; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 5px; width: 100%; transition: 0.3s; margin-top: 15px; }
-        .publish-btn:hover { background: #218838; }
-        .token-box { background: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 5px solid #ffc107; }
+        body { font-family: 'Arial', sans-serif; background: #f0f0f0; padding: 40px; display: flex; justify-content: center; }
+        .editor-container { background: white; padding: 30px; border-radius: 0; border: 1px solid #ddd; box-shadow: 0 0 20px rgba(0,0,0,0.1); width: 100%; max-width: 900px; }
+        h2 { font-family: 'Playfair Display', serif; text-align: center; border-bottom: 4px double #000; padding-bottom: 15px; font-size: 32px; }
+        .token-box { background: #f9f9f9; padding: 15px; border: 1px solid #ccc; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; font-size: 16px; }
+        .publish-btn { background: #000; color: white; border: none; padding: 15px 30px; font-size: 18px; font-family: 'Playfair Display', serif; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        .publish-btn:hover { background: #333; }
     </style>
 </head>
 <body>
     <div class="editor-container">
-        <h2>🚀 G-HIGH TIMES 기사 발행</h2>
+        <h2>THE G-HIGH TIMES GAZETTE</h2>
         
         <div class="token-box">
-            <strong>🔑 편집장 인증:</strong><br>
-            <input type="password" id="github-token" placeholder="여기에 비밀 열쇠(Token)를 입력하세요. (브라우저를 꺼도 저장됩니다)">
+            <strong>🔑 EDITOR AUTHENTICATION:</strong>
+            <input type="password" id="github-token" placeholder="Enter Token">
         </div>
 
         <select id="category">
-            <option value="News">News</option>
-            <option value="Blog">Blog</option>
-            <option value="Interview">Interview</option>
+            <option value="News">INTERNATIONAL NEWS</option>
+            <option value="Blog">EDITORIAL & OPINION</option>
+            <option value="Interview">SPECIAL INTERVIEW</option>
         </select>
-        <input type="text" id="title" placeholder="기사 제목">
-        <input type="text" id="author" placeholder="기자 이름">
+        <input type="text" id="title" placeholder="ENTER HEADLINE...">
+        <input type="text" id="author" placeholder="BYLINE (AUTHOR NAME)">
         <textarea id="content"></textarea>
         
-        <button id="btn-submit" class="publish-btn" onclick="directPublish()">✨ 즉시 기사 발행 (다이렉트)</button>
+        <button id="btn-submit" class="publish-btn" onclick="directPublish()">Publish to Gazette 🚀</button>
     </div>
 
     <script>
         const easyMDE = new EasyMDE({ element: document.getElementById('content'), spellChecker: false });
-
-        // 이전에 입력한 토큰이 있다면 자동으로 불러오기
         document.getElementById('github-token').value = localStorage.getItem('gh-token') || '';
 
         async function directPublish() {
@@ -48,49 +48,54 @@
             const author = document.getElementById('author').value;
             const content = easyMDE.value();
 
-            if(!token || !title || !content) { alert('열쇠(Token), 제목, 내용은 필수입니다!'); return; }
-            
-            // 토큰 브라우저에 저장
+            if(!token || !title || !content) { alert('Fill all fields!'); return; }
             localStorage.setItem('gh-token', token);
 
             const btn = document.getElementById('btn-submit');
-            btn.disabled = true;
-            btn.innerText = "🚀 전송 중...";
+            btn.disabled = true; btn.innerText = "SENDING TO PRESS...";
 
             const now = new Date();
             const dateStr = now.toISOString().split('T')[0];
+            const displayDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             const fileName = `${dateStr}-${Math.floor(Math.random()*10000)}.md`;
-            const fileContent = `---\nlayout: post\ntitle: "${title}"\nauthor: "${author}"\ndate: ${dateStr}\ncategories: [${category}]\n---\n\n${content}`;
 
-            // 깃허브 API를 이용해 직접 파일 생성
+            // 🏛️ 뉴욕 타임즈 스타일 디자인 코드 (기사에 자동 주입)
+            const nytStyle = `
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  .nyt-article { font-family: 'Lora', serif; color: #121212; max-width: 700px; margin: 0 auto; line-height: 1.6; }
+  .nyt-headline { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 900; text-align: center; margin-bottom: 10px; line-height: 1.1; color: #000; }
+  .nyt-byline { font-family: 'Lora', serif; font-size: 14px; text-align: center; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 10px 0; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; }
+  .nyt-content { font-size: 18px; text-align: justify; }
+  .nyt-content::first-letter { font-family: 'Playfair Display', serif; font-size: 75px; float: left; line-height: 60px; padding-top: 4px; padding-right: 8px; padding-left: 3px; font-weight: bold; }
+  hr { border: 0; border-top: 3px double #000; margin: 40px 0; }
+</style>
+
+<div class="nyt-article">
+  <h1 class="nyt-headline">${title}</h1>
+  <div class="nyt-byline">By ${author} | Published ${displayDate}</div>
+  <div class="nyt-content">${content.replace(/\n/g, '<br>')}</div>
+  <hr>
+</div>
+            `;
+
+            const fileContent = `---\nlayout: post\ntitle: "${title}"\nauthor: "${author}"\ndate: ${dateStr}\ncategories: [${category}]\n---\n\n${nytStyle}`;
+
             const url = `https://api.github.com/repos/HANJUN8/G-HIGH-TIMES/contents/_posts/${fileName}`;
             
             try {
                 const response = await fetch(url, {
                     method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: `New article: ${title}`,
-                        content: btoa(unescape(encodeURIComponent(fileContent))) // 내용을 Base64로 변환
-                    })
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `NYT Style: ${title}`, content: btoa(unescape(encodeURIComponent(fileContent))) })
                 });
 
                 if (response.ok) {
-                    alert('🎉 기사가 성공적으로 발행되었습니다! 약 1~2분 뒤 사이트에 나타납니다.');
+                    alert('🎉 Extra! Extra! 기사가 뉴욕 타임즈 스타일로 발행되었습니다!');
                     location.reload();
-                } else {
-                    const errData = await response.json();
-                    alert('❌ 발행 실패: ' + errData.message);
-                }
-            } catch (error) {
-                alert('❌ 에러 발생: ' + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "✨ 발행";
-            }
+                } else { alert('Error!'); }
+            } catch (error) { alert('Network Error!'); }
+            finally { btn.disabled = false; btn.innerText = "Publish to Gazette 🚀"; }
         }
     </script>
 </body>
